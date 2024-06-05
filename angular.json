@@ -137,13 +137,61 @@
 			"prefix": "app",
 			"architect": {
 				"build": {
+					"builder": "@angular-architects/native-federation:build",
+					"options": {},
+					"configurations": {
+						"production": {
+							"target": "ecommerce-shell:esbuild:production"
+						},
+						"development": {
+							"target": "ecommerce-shell:esbuild:development",
+							"dev": true
+						}
+					},
+					"defaultConfiguration": "production"
+				},
+				"serve": {
+					"builder": "@angular-architects/native-federation:build",
+					"options": {
+						"target": "ecommerce-shell:serve-original:development",
+						"rebuildDelay": 0,
+						"dev": true,
+						"port": 0
+					}
+				},
+				"extract-i18n": {
+					"builder": "@angular-devkit/build-angular:extract-i18n"
+				},
+				"test": {
+					"builder": "@angular-devkit/build-angular:karma",
+					"options": {
+						"polyfills": [
+							"zone.js",
+							"zone.js/testing"
+						],
+						"tsConfig": "projects/ecommerce-shell/tsconfig.spec.json",
+						"inlineStyleLanguage": "scss",
+						"assets": [
+							{
+								"glob": "**/*",
+								"input": "projects/ecommerce-shell/public"
+							}
+						],
+						"styles": [
+							"projects/ecommerce-shell/src/styles.scss"
+						],
+						"scripts": []
+					}
+				},
+				"esbuild": {
 					"builder": "@angular-devkit/build-angular:application",
 					"options": {
 						"outputPath": "dist/ecommerce-shell",
 						"index": "projects/ecommerce-shell/src/index.html",
 						"browser": "projects/ecommerce-shell/src/main.ts",
 						"polyfills": [
-							"zone.js"
+							"zone.js",
+							"es-module-shims"
 						],
 						"tsConfig": "projects/ecommerce-shell/tsconfig.app.json",
 						"inlineStyleLanguage": "scss",
@@ -182,40 +230,19 @@
 					},
 					"defaultConfiguration": "production"
 				},
-				"serve": {
+				"serve-original": {
 					"builder": "@angular-devkit/build-angular:dev-server",
 					"configurations": {
 						"production": {
-							"buildTarget": "ecommerce-shell:build:production"
+							"buildTarget": "ecommerce-shell:esbuild:production"
 						},
 						"development": {
-							"buildTarget": "ecommerce-shell:build:development"
+							"buildTarget": "ecommerce-shell:esbuild:development"
 						}
 					},
-					"defaultConfiguration": "development"
-				},
-				"extract-i18n": {
-					"builder": "@angular-devkit/build-angular:extract-i18n"
-				},
-				"test": {
-					"builder": "@angular-devkit/build-angular:karma",
+					"defaultConfiguration": "development",
 					"options": {
-						"polyfills": [
-							"zone.js",
-							"zone.js/testing"
-						],
-						"tsConfig": "projects/ecommerce-shell/tsconfig.spec.json",
-						"inlineStyleLanguage": "scss",
-						"assets": [
-							{
-								"glob": "**/*",
-								"input": "projects/ecommerce-shell/public"
-							}
-						],
-						"styles": [
-							"projects/ecommerce-shell/src/styles.scss"
-						],
-						"scripts": []
+						"port": 4200
 					}
 				}
 			}
