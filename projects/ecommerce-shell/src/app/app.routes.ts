@@ -6,16 +6,17 @@ export const routes: Routes = [
     path: '',
     outlet: 'products',
     loadComponent: () =>
-      import('./pages/products/products.component').then(
-        (m) => m.ProductsComponent
-      ),
+      loadRemoteModule({
+        remoteEntry: 'http://localhost:4202/remoteEntry.json',
+        exposedModule: './Component',
+      }).then((m) => m.AppComponent),
   },
   {
     path: '',
     outlet: 'cart',
     loadComponent: () =>
       loadRemoteModule({
-        remoteEntry: 'http://localhost:4201/remoteEntry.js',
+        remoteEntry: 'http://localhost:4201/remoteEntry.json',
         exposedModule: './Component',
       }).then((m) => m.AppComponent),
   },
